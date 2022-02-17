@@ -6,8 +6,10 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "db.remove": "npm run db.remove && docker-compose rm",
+    "db.stop": "cd ./db && docker-compose stop",
     "db.start": "cd ./db && docker-compose up -d",
-    "api.init": "cd ./api && npm run db.init",
+    "db.init": "cd ./api && npm run db.init",
     "api.dev": "cd ./api && npm run start:dev"
   }
 }

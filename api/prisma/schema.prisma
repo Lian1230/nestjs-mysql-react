@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int        @id @default(autoincrement())
+  email    String     @unique
+  name     String
+  feedback Feedback[]
+}
+
+model Feedback {
+  id          Int      @id @default(autoincrement())
+  authorId    Int
+  sessionId   Int
+  rating      Int
+  content     String?  @db.Text
+  timeCreated DateTime
+  author      User     @relation(fields: [authorId], references: [id])
+  session     Session  @relation(fields: [sessionId], references: [id])
+}
+
+model Session {
+  id        Int        @id @default(autoincrement())
+  gameId    Int
+  startTime DateTime?
+  duration  Float?
+  game      Game       @relation(fields: [gameId], references: [id])
+  feedback  Feedback[]
+}
+
+model Game {
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  session Session[]
+}
