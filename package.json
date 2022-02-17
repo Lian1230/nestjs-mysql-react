@@ -1,0 +1,13 @@
+{
+  "name": "unity-entry",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "db.start": "cd ./db && docker-compose up -d",
+    "api.init": "cd ./api && npm run db.init",
+    "api.dev": "cd ./api && npm run start:dev"
+  }
+}
