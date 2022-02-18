@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { LoremIpsum } from 'lorem-ipsum';
+// import {} from 'loda'
 
 const prisma = new PrismaClient();
 
@@ -11,59 +12,69 @@ const lorem = new LoremIpsum({
 });
 
 async function main() {
-  await prisma.game.createMany({
-    data: [
-      { name: 'Arctico' },
-      { name: 'PowerSlave Exhumed' },
-      { name: 'OlliOlli World' },
-      { name: 'Rogue Tower' },
-      { name: 'Wanderer' },
-    ],
-  });
+  const isGameSeeded = await prisma.game.findFirst();
 
-  await prisma.session.createMany({
-    data: [
-      { gameId: 1 },
-      { gameId: 1 },
-      { gameId: 2 },
-      { gameId: 2 },
-      { gameId: 3 },
-      { gameId: 3 },
-      { gameId: 4 },
-      { gameId: 4 },
-      { gameId: 5 },
-      { gameId: 5 },
-    ],
-  });
+  if (!isGameSeeded) {
+    await prisma.game.createMany({
+      data: [
+        { name: 'Arctico' },
+        { name: 'PowerSlave Exhumed' },
+        { name: 'OlliOlli World' },
+        { name: 'Rogue Tower' },
+        { name: 'Wanderer' },
+      ],
+    });
+  }
 
-  await prisma.user.createMany({
-    data: [
-      {
-        email: 'alice@unity3d.com',
-        name: 'Alice',
-      },
-      {
-        email: 'bob@unity3d.com',
-        name: 'Bob',
-      },
-      {
-        email: 'john@unity3d.com',
-        name: 'John',
-      },
-      {
-        email: 'george@unity3d.com',
-        name: 'George',
-      },
-      {
-        email: 'lian@unity3d.com',
-        name: 'Lian',
-      },
-      {
-        email: 'amanda@unity3d.com',
-        name: 'Amanda',
-      },
-    ],
-  });
+  const isSessionSeeded = await prisma.session.findFirst();
+  if (!isSessionSeeded) {
+    await prisma.session.createMany({
+      data: [
+        { gameId: 1 },
+        { gameId: 1 },
+        { gameId: 2 },
+        { gameId: 2 },
+        { gameId: 3 },
+        { gameId: 3 },
+        { gameId: 4 },
+        { gameId: 4 },
+        { gameId: 5 },
+        { gameId: 5 },
+      ],
+    });
+  }
+
+  const isUserSeeded = await prisma.user.findFirst();
+  if (!isUserSeeded) {
+    await prisma.user.createMany({
+      data: [
+        {
+          email: 'alice@unity3d.com',
+          name: 'Alice',
+        },
+        {
+          email: 'bob@unity3d.com',
+          name: 'Bob',
+        },
+        {
+          email: 'john@unity3d.com',
+          name: 'John',
+        },
+        {
+          email: 'george@unity3d.com',
+          name: 'George',
+        },
+        {
+          email: 'lian@unity3d.com',
+          name: 'Lian',
+        },
+        {
+          email: 'amanda@unity3d.com',
+          name: 'Amanda',
+        },
+      ],
+    });
+  }
 
   await prisma.user.update({
     where: {

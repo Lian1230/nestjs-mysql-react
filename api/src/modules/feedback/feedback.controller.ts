@@ -13,17 +13,32 @@ export class FeedbackController {
 
   @Get('feedbacks')
   async getPublishedPosts(
-    @Query('dateRage') dateRange: string,
+    @Query('pageSize') pageSize: string,
+    @Query('current') current: string,
+    @Query('startTime') startTime: string,
+    @Query('endTime') endTime: string,
     @Query('sort') sort: string,
-  ): Promise<Feedback[]> {
-    const [fromDate, toDate] = dateRange.split(',').map((s) => new Date(s));
+  ): Promise<{ data: Partial<Feedback>[]; page: number; total: number }> {
+    const size = Number.parseInt(pageSize);
+    const page = Number.parseInt(current);
 
-    return this.feedbackService.feedbacks({
-      where: { timeCreated: { gte: fromDate, lte: toDate } },
-      ...(sort && {
-        orderBy: { [sort.slice(1)]: sort.slice(0, 1) == '+' ? 'asc' : 'desc' },
-      }),
-    });
+    return this.feedbackService
+      .feedbacks({
+        skip: size * (page - 1),
+        take: size,
+        where: {
+          timeCreated: {
+            ...(startTime && { gte: new Date(startTime) }),
+            ...(endTime && { lte: new Date(endTime) }),
+          },
+        },
+        ...(sort && {
+          orderBy: {
+            [sort.slice(1)]: sort.slice(0, 1) == '+' ? 'asc' : 'desc',
+          },
+        }),
+      })
+      .then(({ total, data }) => ({ data, page, total }));
   }
 
   @Post('feedback')

@@ -20,15 +20,33 @@ export class FeedbackService {
     cursor?: Prisma.FeedbackWhereUniqueInput;
     where?: Prisma.FeedbackWhereInput;
     orderBy?: Prisma.FeedbackOrderByWithRelationInput;
-  }): Promise<Feedback[]> {
+  }): Promise<{ data: Partial<Feedback>[]; total: number }> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.feedback.findMany({
+    const countQuery = { cursor, where, orderBy };
+    const query = {
+      ...countQuery,
       skip,
       take,
-      cursor,
-      where,
-      orderBy,
-    });
+      include: { author: true, session: { include: { game: true } } },
+    };
+
+    const total = await this.prisma.feedback.count(countQuery);
+
+    return this.prisma.feedback.findMany(query).then((res) => ({
+      total,
+      data: res.map(
+        ({
+          id,
+          rating,
+          content,
+          timeCreated,
+          author: { name: authorName },
+          session: {
+            game: { name: gameName },
+          },
+        }) => ({ id, rating, content, authorName, gameName, timeCreated }),
+      ),
+    }));
   }
 
   async createPost(data: Prisma.FeedbackCreateInput): Promise<Feedback> {
