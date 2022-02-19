@@ -30,16 +30,16 @@ async function main() {
   if (!isSessionSeeded) {
     await prisma.session.createMany({
       data: [
-        { gameId: 1 },
-        { gameId: 1 },
-        { gameId: 2 },
-        { gameId: 2 },
-        { gameId: 3 },
-        { gameId: 3 },
-        { gameId: 4 },
-        { gameId: 4 },
-        { gameId: 5 },
-        { gameId: 5 },
+        { gameId: 1, duration: 15, startTime: new Date('2022-02-10T03:24:00') },
+        { gameId: 1, duration: 20, startTime: new Date('2022-02-11T03:14:00') },
+        { gameId: 2, duration: 25, startTime: new Date('2022-02-12T08:23:00') },
+        { gameId: 2, duration: 30, startTime: new Date('2022-02-13T10:04:00') },
+        { gameId: 3, duration: 35, startTime: new Date('2022-02-14T09:25:00') },
+        { gameId: 3, duration: 36, startTime: new Date('2022-02-15T04:29:00') },
+        { gameId: 4, duration: 40, startTime: new Date('2022-02-16T08:24:00') },
+        { gameId: 4, duration: 48, startTime: new Date('2022-02-17T07:22:00') },
+        { gameId: 5, duration: 50, startTime: new Date('2022-02-03T06:19:00') },
+        { gameId: 5, duration: 60, startTime: new Date('2022-02-05T05:24:00') },
       ],
     });
   }

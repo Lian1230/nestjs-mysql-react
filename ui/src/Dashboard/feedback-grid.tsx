@@ -25,7 +25,7 @@ const columns: ProColumns<UserFeedback>[] = [
     width: 230,
     render: (_, { rating }) => (
       <Space>
-        <Rating ratingValue={(rating / 5) * 100} readonly />
+        <Rating ratingValue={(rating / 5) * 100} readonly size={30} />
       </Space>
     ),
   },
@@ -126,5 +126,8 @@ const Wrapper = styled.div`
   }
   .ant-pagination {
     margin: 16px 12px;
+  }
+  .react-simple-star-rating{
+    top: 2px;
   }
 `;

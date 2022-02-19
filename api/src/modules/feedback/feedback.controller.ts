@@ -42,7 +42,7 @@ export class FeedbackController {
   }
 
   @Post('feedback')
-  async createDraft(
+  async createFeedback(
     @Body()
     postData: {
       sessionId: number;
@@ -52,7 +52,7 @@ export class FeedbackController {
     },
   ): Promise<Feedback> {
     const { sessionId, content, userId, rating } = postData;
-    return this.feedbackService.createPost({
+    return this.feedbackService.createFeedback({
       content,
       rating,
       timeCreated: new Date(),

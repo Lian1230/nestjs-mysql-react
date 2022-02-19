@@ -1,6 +1,6 @@
 import { Divider } from 'antd';
-import { Feedback } from './Feedback';
-import { FeedbackGrid } from './FeedbackGrid';
+import { Feedback } from './feedback';
+import { FeedbackGrid } from './feedback-grid';
 import styled from 'styled-components';
 
 export default () => {

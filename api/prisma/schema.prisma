@@ -31,8 +31,8 @@ model Feedback {
 model Session {
   id        Int        @id @default(autoincrement())
   gameId    Int
-  startTime DateTime?
-  duration  Float?
+  startTime DateTime
+  duration  Int // minuite
   game      Game       @relation(fields: [gameId], references: [id])
   feedback  Feedback[]
 }

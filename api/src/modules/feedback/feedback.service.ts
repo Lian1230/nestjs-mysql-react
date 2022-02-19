@@ -7,10 +7,10 @@ export class FeedbackService {
   constructor(private prisma: PrismaService) {}
 
   async feedback(
-    postWhereUniqueInput: Prisma.FeedbackWhereUniqueInput,
+    feedbackWhereUniqueInput: Prisma.FeedbackWhereUniqueInput,
   ): Promise<Feedback | null> {
     return this.prisma.feedback.findUnique({
-      where: postWhereUniqueInput,
+      where: feedbackWhereUniqueInput,
     });
   }
 
@@ -49,7 +49,7 @@ export class FeedbackService {
     }));
   }
 
-  async createPost(data: Prisma.FeedbackCreateInput): Promise<Feedback> {
+  async createFeedback(data: Prisma.FeedbackCreateInput): Promise<Feedback> {
     return this.prisma.feedback.create({
       data,
     });
