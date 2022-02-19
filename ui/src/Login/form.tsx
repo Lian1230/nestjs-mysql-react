@@ -5,7 +5,8 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Menu, Dropdown } from 'antd';
 import { Promise } from 'bluebird';
 import request from 'umi-request';
-import { PersistUser, User } from '../redux/action';
+import { PersistUser } from '../redux/action';
+import { User } from '../redux/types';
 import { useStore } from '../redux/store';
 
 const defaultUser = {

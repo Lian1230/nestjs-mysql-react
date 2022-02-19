@@ -1,12 +1,9 @@
+import { User, Game } from './types';
+
 export enum ActionType {
+  PersistGames = 'PERSIST_GAMES',
   PersistUser = 'PERSIST_USER',
   Logout = 'LOG_OUT',
-}
-
-export interface User {
-  id: number;
-  name: string;
-  email: string;
 }
 
 export class PersistUser {
@@ -14,8 +11,13 @@ export class PersistUser {
   constructor(public user: User) {}
 }
 
+export class PersistGames {
+  readonly type = ActionType.PersistGames;
+  constructor(public games: Game[]) {}
+}
+
 export class Logout {
   readonly type = ActionType.Logout;
 }
 
-export type Action = PersistUser | Logout;
+export type Action = PersistUser | PersistGames | Logout;

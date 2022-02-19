@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import { LoremIpsum } from 'lorem-ipsum';
-// import {} from 'loda'
 
 const prisma = new PrismaClient();
 

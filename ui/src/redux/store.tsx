@@ -1,10 +1,12 @@
 import { FC, createContext, Dispatch, useContext } from 'react';
 import { useReducer } from 'reinspect';
-import { Action, User } from './action';
+import { Action } from './action';
+import { User, Game } from './types';
 import { reducer } from './reducer';
 
 export interface Store {
   user?: User | null;
+  games?: Game[] | null;
 }
 
 export const INIT_STATE = {};

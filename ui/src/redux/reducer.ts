@@ -6,6 +6,9 @@ export const reducer = (store: Store, action: Action): Store => {
     case ActionType.PersistUser:
       return { ...store, user: action.user };
 
+    case ActionType.PersistGames:
+      return { ...store, games: action.games };
+
     case ActionType.Logout:
       return { ...store, user: null };
 
