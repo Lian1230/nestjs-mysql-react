@@ -1,10 +1,11 @@
 import { useRef } from 'react';
-import { Button, Tag, Space, Menu, Dropdown } from 'antd';
+import { Space } from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable, { IntlProvider, enUSIntl } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
 import { Rating } from 'react-simple-star-rating';
 import request from 'umi-request';
 import { isEmpty } from 'lodash';
+import styled from 'styled-components';
 
 type UserFeedback = {
   id: number;
@@ -64,17 +65,17 @@ const columns: ProColumns<UserFeedback>[] = [
     search: {
       // transform: (value) => `${value[0]},${value[1]}`,
       transform: (value) => ({
-        startTime: value[0],
-        endTime: value[1],
+        startTime: value?.[0],
+        endTime: value?.[1],
       }),
     },
   },
 ];
 
-export default () => {
+export const FeedbackGrid = () => {
   const actionRef = useRef<ActionType>();
   return (
-    <IntlProvider value={{ intl: enUSIntl, valueTypeMap: {} }}>
+    <Wrapper>
       <ProTable<UserFeedback>
         columns={columns}
         actionRef={actionRef}
@@ -111,6 +112,19 @@ export default () => {
         pagination={{ pageSize: 5 }}
         dateFormatter="string"
       />
-    </IntlProvider>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  margin: 2rem 0;
+  .ant-card-body {
+    padding: 0;
+  }
+  .ant-pro-table-list-toolbar {
+    padding: 8px;
+  }
+  .ant-pagination {
+    margin: 16px 12px;
+  }
+`;

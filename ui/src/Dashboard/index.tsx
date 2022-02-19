@@ -1,0 +1,21 @@
+import { Divider } from 'antd';
+import { Feedback } from './Feedback';
+import { FeedbackGrid } from './FeedbackGrid';
+import styled from 'styled-components';
+
+export default () => {
+  return (
+    <DashboardWrapper>
+      <Feedback />
+      <Divider />
+      <FeedbackGrid />
+    </DashboardWrapper>
+  );
+};
+
+const DashboardWrapper = styled.div`
+  @media only screen and (max-width: 600px) {
+    margin: 0;
+  }
+  margin: 0 2rem;
+`;

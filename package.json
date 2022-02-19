@@ -11,6 +11,6 @@
     "db.start": "cd ./db && docker-compose up -d",
     "db.init": "cd ./api && npm run db.init",
     "api.dev": "cd ./api && npm run start:dev",
-    "ui.dev": "cd ./ui && npm run start"
+    "ui.dev": "cd ./ui && npm run dev"
   }
 }

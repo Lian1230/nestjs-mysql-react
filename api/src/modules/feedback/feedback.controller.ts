@@ -7,12 +7,12 @@ export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
 
   @Get('feedback/:id')
-  async getPostById(@Param('id') id: string): Promise<Feedback> {
+  async getFeedbackById(@Param('id') id: string): Promise<Feedback> {
     return this.feedbackService.feedback({ id: Number(id) });
   }
 
   @Get('feedbacks')
-  async getPublishedPosts(
+  async getFeedbacks(
     @Query('pageSize') pageSize: string,
     @Query('current') current: string,
     @Query('startTime') startTime: string,
