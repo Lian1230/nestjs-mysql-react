@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button, Input, Typography, Select } from 'antd';
+import { Button, Input, Typography, Select, message } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import { Rating } from 'react-simple-star-rating';
 import request from 'umi-request';
@@ -15,52 +15,56 @@ export const Feedback = () => {
   const [rating, setRating] = useState(100);
   const [games, setGames] = useState<Game[]>();
   const [selectedGameId, setSelectedGameId] = useState<string>();
+  const [selectedSessionId, setSelectedSessionId] = useState<number>();
 
-  const selectedSessionId = useRef<number>();
   const comment = useRef<string>();
+  const sessionMap = useRef<{ [key in string]: Session[] }>();
 
   useEffect(() => {
-    request<Game[]>('http://localhost:3001/games', {
+    request<Game[]>('http://localhost:3001/games/sessions-no-comment', {
       params: {
         userId: user?.id,
-        includeSessions: true,
       },
-    }).then((games) => setGames(games));
+    }).then((games) => {
+      setGames(games);
+      sessionMap.current = games.reduce(
+        (prev, curr) => ({ ...prev, [curr.id]: curr.sessions }),
+        {},
+      );
+    });
   }, []);
 
   const handleRating = (rate: number) => {
     setRating(rate);
   };
 
+  const sessions = !selectedGameId ? [] : sessionMap.current?.[selectedGameId] ?? [];
+
   const submit = () => {
-    console.log({
-      userId: user?.id,
-      sessionId: selectedSessionId.current,
-      rating: rating / 20,
-      content: comment.current,
-    });
-    // request('http://localhost:3001/feedback', {
-    //   method: 'POST',
-    //   data: {},
-    // }).then((res) => console.log(res));
+    request('http://localhost:3001/feedback', {
+      method: 'POST',
+      data: {
+        userId: user?.id,
+        sessionId: selectedSessionId,
+        rating: rating / 20,
+        content: comment.current,
+      },
+    })
+      .then(() => {
+        message.success('You feedback is published! Thank you for comment!');
+      })
+      .catch((err) => {
+        message.error(err?.data?.message ?? 'Unknown serverside error.', 5);
+      });
   };
 
-  const sessions =
-    games
-      ?.filter((g) => g.id.toString() === selectedGameId)
-      ?.map((g) => g.session || [])
-      ?.flat() ?? [];
-
-  const formatSession = (session: Session) => {
+  const formatSession = (session: Session = sessions[0]) => {
     if (!session) return undefined;
-    return `${session.duration} mins from ${new Date(
-      session.startTime,
-    ).toDateString()}`;
+    return `${session.duration} mins from ${new Date(session.startedAt).toDateString()}`;
   };
 
   return (
     <FeedbackWrapper>
-      <Title level={3}>New Feedback</Title>
       <Title level={4}>Game and Session:</Title>
       <div>
         <Select
@@ -68,6 +72,7 @@ export const Feedback = () => {
           defaultValue={'Select Game'}
           onChange={(gameId) => {
             setSelectedGameId(gameId);
+            setSelectedSessionId(sessionMap.current?.[gameId][0].id);
           }}
         >
           {games?.map((game) => (
@@ -76,15 +81,12 @@ export const Feedback = () => {
         </Select>
         <Select
           defaultValue={'Select Session'}
-          value={formatSession(sessions[0])}
-          onChange={(sessionId) => {
-            selectedSessionId.current = Number.parseInt(sessionId);
-          }}
+          style={{ minWidth: 200 }}
+          value={formatSession(sessions.find((s) => s.id === selectedSessionId))}
+          onChange={(id) => setSelectedSessionId(Number.parseInt(id))}
         >
-          {sessions?.map((session) => (
-            <Select.Option key={session.id}>
-              {formatSession(session)}
-            </Select.Option>
+          {sessions.map((session) => (
+            <Select.Option key={session.id}>{formatSession(session)}</Select.Option>
           ))}
         </Select>
       </div>
@@ -96,13 +98,7 @@ export const Feedback = () => {
         maxLength={500}
         onChange={(evt) => (comment.current = evt.target.value)}
       />
-      <Submit
-        type="primary"
-        shape="round"
-        icon={<SendOutlined />}
-        size={'large'}
-        onClick={submit}
-      >
+      <Submit type="primary" shape="round" icon={<SendOutlined />} size={'large'} onClick={submit}>
         Submit
       </Submit>
     </FeedbackWrapper>
@@ -118,7 +114,7 @@ const Submit = styled(Button)`
 const FeedbackWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 2rem 0;
   textarea {
     font-size: 20px;

@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { GameService } from './game.service';
 import { Game } from '@prisma/client';
 
@@ -14,6 +14,13 @@ export class GameController {
     return this.gameService.games({
       userId: Number.parseInt(userId),
       includeSessions: includeSessions === 'true',
+    });
+  }
+
+  @Get('games/sessions-no-comment')
+  async getGamesWithNoCommentSessions(@Query('userId') userId: string): Promise<Game[]> {
+    return this.gameService.gamesWithSessionNoComment({
+      userId: Number.parseInt(userId),
     });
   }
 }

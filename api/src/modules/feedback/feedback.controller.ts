@@ -1,4 +1,13 @@
-import { Controller, Get, Param, Post, Body, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Query,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
 import { Feedback } from '@prisma/client';
 
@@ -15,7 +24,7 @@ export class FeedbackController {
   async getFeedbacks(
     @Query('pageSize') pageSize: string,
     @Query('current') current: string,
-    @Query('startTime') startTime: string,
+    @Query('startedAt') startedAt: string,
     @Query('endTime') endTime: string,
     @Query('sort') sort: string,
   ): Promise<{ data: Partial<Feedback>[]; page: number; total: number }> {
@@ -27,8 +36,8 @@ export class FeedbackController {
         skip: size * (page - 1),
         take: size,
         where: {
-          timeCreated: {
-            ...(startTime && { gte: new Date(startTime) }),
+          createdAt: {
+            ...(startedAt && { gte: new Date(startedAt) }),
             ...(endTime && { lte: new Date(endTime) }),
           },
         },
@@ -45,46 +54,39 @@ export class FeedbackController {
   async createFeedback(
     @Body()
     postData: {
+      userId: number;
       sessionId: number;
       rating: number;
       content?: string;
-      userId: number;
     },
   ): Promise<Feedback> {
     const { sessionId, content, userId, rating } = postData;
-    return this.feedbackService.createFeedback({
-      content,
-      rating,
-      timeCreated: new Date(),
-      session: {
-        connect: { id: sessionId },
-      },
-      author: {
-        connect: { id: userId },
-      },
-    });
+    const isFeedbackCreated = await this.feedbackService.isFeedbackCreated({ sessionId, userId });
+    if (isFeedbackCreated) {
+      throw new HttpException(
+        `A feedback for this session was already created`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    return this.feedbackService
+      .createFeedback({
+        content,
+        rating,
+        session: {
+          connect: { id: sessionId },
+        },
+        author: {
+          connect: { id: userId },
+        },
+      })
+      .catch((err) => {
+        if (err?.message?.includes('Unique constraint failed on the constraint')) {
+          throw new HttpException(
+            'Failed due to conflict. Feedback might already craeted',
+            HttpStatus.CONFLICT,
+          );
+        }
+        throw new HttpException('Unknown service error', HttpStatus.INTERNAL_SERVER_ERROR);
+      });
   }
-
-  // @Get('filtered-posts/:searchString')
-  // async getFilteredPosts(
-  //   @Param('searchString') searchString: string,
-  // ): Promise<Feedback[]> {
-  //   return this.postService.posts({
-  //     where: {
-  //       OR: [
-  //         {
-  //           title: { contains: searchString },
-  //         },
-  //         {
-  //           content: { contains: searchString },
-  //         },
-  //       ],
-  //     },
-  //   });
-  // }
-
-  // @Delete('feedback/:id')
-  // async deletePost(@Param('id') id: string): Promise<Feedback> {
-  //   return this.feedbackService.deletePost({ id: Number(id) });
-  // }
 }

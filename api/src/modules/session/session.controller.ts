@@ -15,7 +15,7 @@ export class SessionController {
     return this.sessionService.sessions({
       where: {
         ...(gameId && { gameId }),
-        feedback: {
+        feedbacks: {
           none: {
             ...(authorId && { authorId }),
           },

@@ -13,7 +13,7 @@ type UserFeedback = {
   content: string;
   authorName: string;
   gameName: string;
-  timeCreated: string;
+  createdAt: string;
 };
 
 const columns: ProColumns<UserFeedback>[] = [
@@ -51,7 +51,7 @@ const columns: ProColumns<UserFeedback>[] = [
   },
   {
     title: 'Created At',
-    dataIndex: 'timeCreated',
+    dataIndex: 'createdAt',
     valueType: 'dateTime',
     sorter: true,
     hideInSearch: true,
@@ -59,13 +59,12 @@ const columns: ProColumns<UserFeedback>[] = [
   },
   {
     title: 'Created At',
-    dataIndex: 'timeCreated',
+    dataIndex: 'createdAt',
     valueType: 'dateRange',
     hideInTable: true,
     search: {
-      // transform: (value) => `${value[0]},${value[1]}`,
       transform: (value) => ({
-        startTime: value?.[0],
+        startedAt: value?.[0],
         endTime: value?.[1],
       }),
     },
@@ -83,11 +82,10 @@ export const FeedbackGrid = () => {
           if (!isEmpty(sort)) {
             const sortBy = Object.keys(sort)[0];
             params.sort = `${sort[sortBy] === 'ascend' ? '+' : '-'}${sortBy}`;
+          } else {
+            params.sort = '-createdAt';
           }
-          return request<{ data: UserFeedback[] }>(
-            'http://localhost:3001/feedbacks',
-            { params },
-          );
+          return request<{ data: UserFeedback[] }>('http://localhost:3001/feedbacks', { params });
         }}
         editable={{
           type: 'multiple',
@@ -105,7 +103,7 @@ export const FeedbackGrid = () => {
             type === 'get'
               ? {
                   ...values,
-                  created_at: [values.startTime, values.endTime],
+                  created_at: [values.startedAt, values.endTime],
                 }
               : values,
         }}
@@ -127,7 +125,7 @@ const Wrapper = styled.div`
   .ant-pagination {
     margin: 16px 12px;
   }
-  .react-simple-star-rating{
+  .react-simple-star-rating {
     top: 2px;
   }
 `;

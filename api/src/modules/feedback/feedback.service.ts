@@ -39,36 +39,35 @@ export class FeedbackService {
           id,
           rating,
           content,
-          timeCreated,
+          createdAt,
           author: { name: authorName },
           session: {
             game: { name: gameName },
           },
-        }) => ({ id, rating, content, authorName, gameName, timeCreated }),
+        }) => ({ id, rating, content, authorName, gameName, createdAt }),
       ),
     }));
   }
 
   async createFeedback(data: Prisma.FeedbackCreateInput): Promise<Feedback> {
-    return this.prisma.feedback.create({
-      data,
-    });
+    return this.prisma.feedback.create({ data });
   }
 
-  async updatePost(params: {
-    where: Prisma.FeedbackWhereUniqueInput;
-    data: Prisma.FeedbackUpdateInput;
-  }): Promise<Feedback> {
-    const { data, where } = params;
-    return this.prisma.feedback.update({
-      data,
-      where,
-    });
-  }
-
-  async deletePost(where: Prisma.FeedbackWhereUniqueInput): Promise<Feedback> {
-    return this.prisma.feedback.delete({
-      where,
-    });
+  async isFeedbackCreated(params: { sessionId: number; userId: number }): Promise<boolean> {
+    return this.prisma.session
+      .findMany({
+        where: {
+          id: params.sessionId,
+          feedbacks: {
+            some: {
+              authorId: params.userId,
+            },
+          },
+        },
+        // include: {
+        //   feedbacks: true,
+        // },
+      })
+      .then((sessions) => !!sessions.length);
   }
 }

@@ -6,12 +6,12 @@ export interface User {
 
 export interface Session {
   id: number,
-  startTime: string,
+  startedAt: string,
   duration: number,
 }
 
 export interface Game {
   id: number;
   name: string;
-  session?: Session[]
+  sessions?: Session[]
 }
