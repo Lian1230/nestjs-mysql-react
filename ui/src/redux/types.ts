@@ -15,3 +15,13 @@ export interface Game {
   name: string;
   sessions?: Session[]
 }
+
+export interface Feedback {
+  id: number;
+  rating: number;
+  content: string;
+  authorName: string;
+  gameName: string;
+  duration: number;
+  createdAt: string;
+}

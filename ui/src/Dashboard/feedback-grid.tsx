@@ -7,17 +7,9 @@ import request from 'umi-request';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { DatePresets } from './date-range-presets';
+import { Feedback } from '../redux/types';
 
-type UserFeedback = {
-  id: number;
-  rating: number;
-  content: string;
-  authorName: string;
-  gameName: string;
-  createdAt: string;
-};
-
-const columns: ProColumns<UserFeedback>[] = [
+const columns: ProColumns<Feedback>[] = [
   {
     title: 'Rating',
     dataIndex: 'rating',
@@ -33,6 +25,7 @@ const columns: ProColumns<UserFeedback>[] = [
   {
     title: 'Comment',
     dataIndex: 'content',
+    valueType: 'textarea',
     copyable: true,
     ellipsis: true,
     // onFilter: true,
@@ -49,6 +42,13 @@ const columns: ProColumns<UserFeedback>[] = [
     dataIndex: 'gameName',
     search: false,
     width: 120,
+  },
+  {
+    title: 'Duration',
+    dataIndex: 'duration',
+    search: false,
+    width: 100,
+    renderText: (text) => `${text} mins`,
   },
   {
     title: 'Created At',
@@ -78,7 +78,7 @@ export const FeedbackGrid = () => {
   const actionRef = useRef<ActionType>();
   return (
     <Wrapper>
-      <ProTable<UserFeedback>
+      <ProTable<Feedback>
         columns={columns}
         actionRef={actionRef}
         request={async (params = {}, sort, filter) => {
@@ -88,7 +88,7 @@ export const FeedbackGrid = () => {
           } else {
             params.sort = '-createdAt';
           }
-          return request<{ data: UserFeedback[] }>('http://localhost:3001/feedbacks', { params });
+          return request<{ data: Feedback[] }>('http://localhost:3001/feedbacks', { params });
         }}
         editable={{
           type: 'multiple',

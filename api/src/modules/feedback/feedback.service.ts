@@ -6,14 +6,6 @@ import { Prisma, Feedback } from '@prisma/client';
 export class FeedbackService {
   constructor(private prisma: PrismaService) {}
 
-  async feedback(
-    feedbackWhereUniqueInput: Prisma.FeedbackWhereUniqueInput,
-  ): Promise<Feedback | null> {
-    return this.prisma.feedback.findUnique({
-      where: feedbackWhereUniqueInput,
-    });
-  }
-
   async feedbacks(params: {
     skip?: number;
     take?: number;
@@ -42,15 +34,34 @@ export class FeedbackService {
           createdAt,
           author: { name: authorName },
           session: {
+            duration,
             game: { name: gameName },
           },
-        }) => ({ id, rating, content, authorName, gameName, createdAt }),
+        }) => ({ id, rating, content, authorName, gameName, duration, createdAt }),
       ),
     }));
   }
 
-  async createFeedback(data: Prisma.FeedbackCreateInput): Promise<Feedback> {
-    return this.prisma.feedback.create({ data });
+  async createFeedback(data: {
+    userId: number;
+    sessionId: number;
+    rating: number;
+    content?: string;
+  }): Promise<Feedback> {
+    const { sessionId, content, userId, rating } = data;
+
+    return this.prisma.feedback.create({
+      data: {
+        content,
+        rating,
+        session: {
+          connect: { id: sessionId },
+        },
+        author: {
+          connect: { id: userId },
+        },
+      },
+    });
   }
 
   async isFeedbackCreated(params: { sessionId: number; userId: number }): Promise<boolean> {

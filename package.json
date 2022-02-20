@@ -10,6 +10,7 @@
     "db.stop": "cd ./db && docker-compose stop",
     "db.start": "cd ./db && docker-compose up -d",
     "db.init": "cd ./api && npm run db.init",
+    "db.seed": "cd ./api && npm run db.seed",
     "api.dev": "cd ./api && npm run start:dev",
     "ui.dev": "cd ./ui && npm run dev"
   }

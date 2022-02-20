@@ -1,24 +1,10 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  Body,
-  Query,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, HttpException, HttpStatus } from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
 import { Feedback } from '@prisma/client';
 
 @Controller()
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
-
-  @Get('feedback/:id')
-  async getFeedbackById(@Param('id') id: string): Promise<Feedback> {
-    return this.feedbackService.feedback({ id: Number(id) });
-  }
 
   @Get('feedbacks')
   async getFeedbacks(
@@ -53,40 +39,31 @@ export class FeedbackController {
   @Post('feedback')
   async createFeedback(
     @Body()
-    postData: {
+    body: {
       userId: number;
       sessionId: number;
       rating: number;
       content?: string;
     },
   ): Promise<Feedback> {
-    const { sessionId, content, userId, rating } = postData;
+    const { sessionId, userId } = body;
+
     const isFeedbackCreated = await this.feedbackService.isFeedbackCreated({ sessionId, userId });
+
     if (isFeedbackCreated) {
       throw new HttpException(
         `A feedback for this session was already created`,
         HttpStatus.FORBIDDEN,
       );
     }
-    return this.feedbackService
-      .createFeedback({
-        content,
-        rating,
-        session: {
-          connect: { id: sessionId },
-        },
-        author: {
-          connect: { id: userId },
-        },
-      })
-      .catch((err) => {
-        if (err?.message?.includes('Unique constraint failed on the constraint')) {
-          throw new HttpException(
-            'Failed due to conflict. Feedback might already craeted',
-            HttpStatus.CONFLICT,
-          );
-        }
-        throw new HttpException('Unknown service error', HttpStatus.INTERNAL_SERVER_ERROR);
-      });
+    return this.feedbackService.createFeedback(body).catch((err) => {
+      if (err?.message?.includes('Unique constraint failed on the constraint')) {
+        throw new HttpException(
+          'Failed due to conflict. Feedback might already craeted',
+          HttpStatus.CONFLICT,
+        );
+      }
+      throw new HttpException('Unknown service error', HttpStatus.INTERNAL_SERVER_ERROR);
+    });
   }
 }

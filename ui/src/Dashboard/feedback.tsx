@@ -6,6 +6,7 @@ import request from 'umi-request';
 import styled from 'styled-components';
 import { useStore } from '../redux/store';
 import { Game, Session } from '../redux/types';
+import moment from 'moment';
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -60,7 +61,7 @@ export const Feedback = () => {
 
   const formatSession = (session: Session = sessions[0]) => {
     if (!session) return undefined;
-    return `${session.duration} mins from ${new Date(session.startedAt).toDateString()}`;
+    return `${session.duration} mins on ${moment(session.startedAt).format('YYYY-MM-DD')}`;
   };
 
   return (
@@ -70,6 +71,7 @@ export const Feedback = () => {
         <Select
           loading={!games}
           defaultValue={'Select Game'}
+          style={{ minWidth: 130 }}
           onChange={(gameId) => {
             setSelectedGameId(gameId);
             setSelectedSessionId(sessionMap.current?.[gameId][0].id);
@@ -81,7 +83,7 @@ export const Feedback = () => {
         </Select>
         <Select
           defaultValue={'Select Session'}
-          style={{ minWidth: 200 }}
+          style={{ minWidth: 180 }}
           value={formatSession(sessions.find((s) => s.id === selectedSessionId))}
           onChange={(id) => setSelectedSessionId(Number.parseInt(id))}
         >
