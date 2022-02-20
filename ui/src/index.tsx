@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import ReactDOM from 'react-dom';
-import { Layout } from 'antd';
+import { ConfigProvider, Layout } from 'antd';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { IntlProvider, enUSIntl } from '@ant-design/pro-table';
 import { StateInspector } from 'reinspect';
@@ -9,6 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import { Login } from './Login';
 import { Header } from './Layout/header';
 import styled from 'styled-components';
+import locale from 'antd/lib/locale/en_US';
 
 import 'antd/dist/antd.css';
 import './index.css';
@@ -25,26 +26,28 @@ const ProtectedRoute: FC = ({ children }) => {
 const App = () => (
   <StateInspector>
     <StoreProvider>
-      <IntlProvider value={{ intl: enUSIntl, valueTypeMap: {} }}>
-        <BrowserRouter>
-          <LayoutWrapper>
-            <Header />
-            <Content>
-              <Routes>
-                <Route
-                  path="/feedback"
-                  element={
-                    <ProtectedRoute>
-                      <DashBoard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/*" element={<Login />} />
-              </Routes>
-            </Content>
-          </LayoutWrapper>
-        </BrowserRouter>
-      </IntlProvider>
+      <ConfigProvider locale={locale}>
+        <IntlProvider value={{ intl: enUSIntl, valueTypeMap: {} }}>
+          <BrowserRouter>
+            <LayoutWrapper>
+              <Header />
+              <Content>
+                <Routes>
+                  <Route
+                    path="/feedback"
+                    element={
+                      <ProtectedRoute>
+                        <DashBoard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="/*" element={<Login />} />
+                </Routes>
+              </Content>
+            </LayoutWrapper>
+          </BrowserRouter>
+        </IntlProvider>
+      </ConfigProvider>
     </StoreProvider>
   </StateInspector>
 );

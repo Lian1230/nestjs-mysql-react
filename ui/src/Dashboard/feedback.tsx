@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button, Input, Typography, Select, message } from 'antd';
+import { Button, Input, Typography, Select, Space, message } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import { Rating } from 'react-simple-star-rating';
 import request from 'umi-request';
@@ -16,8 +16,8 @@ export const Feedback = () => {
   const [games, setGames] = useState<Game[]>();
   const [selectedGameId, setSelectedGameId] = useState<string>();
   const [selectedSessionId, setSelectedSessionId] = useState<number>();
+  const [comment, setComment] = useState<string>();
 
-  const comment = useRef<string>();
   const sessionMap = useRef<{ [key in string]: Session[] }>();
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export const Feedback = () => {
         userId: user?.id,
         sessionId: selectedSessionId,
         rating: rating / 20,
-        content: comment.current,
+        content: comment,
       },
     })
       .then(() => {
@@ -66,7 +66,7 @@ export const Feedback = () => {
   return (
     <FeedbackWrapper>
       <Title level={4}>Game and Session:</Title>
-      <div>
+      <Space style={{ marginBottom: '1rem' }}>
         <Select
           loading={!games}
           defaultValue={'Select Game'}
@@ -89,16 +89,23 @@ export const Feedback = () => {
             <Select.Option key={session.id}>{formatSession(session)}</Select.Option>
           ))}
         </Select>
-      </div>
+      </Space>
       <Title level={4}>Your rating:</Title>
       <Rating ratingValue={rating} onClick={handleRating} />
       <TextArea
         rows={5}
         placeholder="Please tell us more"
         maxLength={500}
-        onChange={(evt) => (comment.current = evt.target.value)}
+        onChange={(evt) => setComment(evt.target.value)}
       />
-      <Submit type="primary" shape="round" icon={<SendOutlined />} size={'large'} onClick={submit}>
+      <Submit
+        type="primary"
+        shape="round"
+        icon={<SendOutlined />}
+        size={'large'}
+        onClick={submit}
+        disabled={!selectedSessionId || !comment}
+      >
         Submit
       </Submit>
     </FeedbackWrapper>

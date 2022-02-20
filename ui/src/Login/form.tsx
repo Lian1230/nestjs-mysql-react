@@ -35,9 +35,7 @@ export const Form = () => {
     if (!email || !passcode) {
       autoComplete();
     }
-    dispatch(
-      new PersistUser(users.find((u) => u.email === email) || defaultUser),
-    );
+    dispatch(new PersistUser(users.find((u) => u.email === email) || defaultUser));
     return Promise.delay(500).then(() => navigate('/feedback'));
   };
 
@@ -57,7 +55,6 @@ export const Form = () => {
         /* @ts-ignore */
         value={email}
         onChange={(evt: any) => {
-          console.log(evt.target.value);
           setEmail(evt.target.value);
         }}
         name="username"
@@ -69,7 +66,7 @@ export const Form = () => {
             </Dropdown>
           ),
         }}
-        placeholder={`email: ${defaultUser.email}`}
+        placeholder={'<--click here to select user'}
         rules={[
           {
             required: false,
@@ -86,7 +83,7 @@ export const Form = () => {
           size: 'large',
           prefix: <LockOutlined className={'prefixIcon'} />,
         }}
-        placeholder={'passcode: unity'}
+        placeholder={'or just hit Login below'}
         rules={[
           {
             required: false,

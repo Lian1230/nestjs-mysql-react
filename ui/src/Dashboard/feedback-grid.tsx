@@ -6,6 +6,7 @@ import { Rating } from 'react-simple-star-rating';
 import request from 'umi-request';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
+import { DatePresets } from './date-range-presets';
 
 type UserFeedback = {
   id: number;
@@ -58,10 +59,12 @@ const columns: ProColumns<UserFeedback>[] = [
     width: 180,
   },
   {
-    title: 'Created At',
+    title: null,
+    key: 'createdAt',
     dataIndex: 'createdAt',
     valueType: 'dateRange',
     hideInTable: true,
+    renderFormItem: (_, __, formInstance) => <DatePresets formInstance={formInstance} />,
     search: {
       transform: (value) => ({
         startedAt: value?.[0],
