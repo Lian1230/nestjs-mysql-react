@@ -20,7 +20,7 @@ export const DatePresets = ({ formInstance }: { formInstance: FormInstance }) =>
   }, [currentDateRange]);
 
   const submit = (pickedDateRange: [Moment, Moment]) => {
-    console.log(pickedDateRange.map((x) => x.format()));
+    // console.log(pickedDateRange.map((x) => x.format()));
     setDateRange(pickedDateRange);
     formInstance.setFieldsValue({
       createdAt: pickedDateRange?.map((dr) => dr?.format('YYYY-MM-DD HH:mm:ss')),

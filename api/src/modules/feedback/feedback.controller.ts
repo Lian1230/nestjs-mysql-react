@@ -10,9 +10,9 @@ export class FeedbackController {
   async getFeedbacks(
     @Query('pageSize') pageSize: string,
     @Query('current') current: string,
-    @Query('startedAt') startedAt: string,
-    @Query('endTime') endTime: string,
-    @Query('sort') sort: string,
+    @Query('startedAt') startedAt?: string,
+    @Query('endTime') endTime?: string,
+    @Query('sort') sort?: string,
   ): Promise<{ data: Partial<Feedback>[]; page: number; total: number }> {
     const size = Number.parseInt(pageSize);
     const page = Number.parseInt(current);

@@ -65,13 +65,14 @@ export const Feedback = () => {
   };
 
   return (
-    <FeedbackWrapper>
+    <Wrapper>
       <Title level={4}>Game and Session:</Title>
       <Space style={{ marginBottom: '1rem' }}>
         <Select
           loading={!games}
           defaultValue={'Select Game'}
           style={{ minWidth: 130 }}
+          size="large"
           onChange={(gameId) => {
             setSelectedGameId(gameId);
             setSelectedSessionId(sessionMap.current?.[gameId][0].id);
@@ -84,6 +85,7 @@ export const Feedback = () => {
         <Select
           defaultValue={'Select Session'}
           style={{ minWidth: 180 }}
+          size="large"
           value={formatSession(sessions.find((s) => s.id === selectedSessionId))}
           onChange={(id) => setSelectedSessionId(Number.parseInt(id))}
         >
@@ -110,7 +112,7 @@ export const Feedback = () => {
       >
         Submit
       </Submit>
-    </FeedbackWrapper>
+    </Wrapper>
   );
 };
 
@@ -120,7 +122,7 @@ const Submit = styled(Button)`
   align-self: end;
 `;
 
-const FeedbackWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   /* max-width: 800px; */
@@ -128,7 +130,9 @@ const FeedbackWrapper = styled.div`
   textarea {
     font-size: 20px;
   }
-
+  .ant-select-selector {
+    border-radius: 40px !important;
+  }
   .react-simple-star-rating {
     top: -2px;
     left: -5px;

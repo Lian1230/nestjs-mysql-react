@@ -6,12 +6,14 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "db.remove": "npm run db.remove && docker-compose rm",
+    "dep": "npm --prefix api i && npm --prefix ui i",
+    "db.remove": "npm run db.stop && docker-compose rm",
     "db.stop": "cd ./db && docker-compose stop",
     "db.start": "cd ./db && docker-compose up -d",
-    "db.init": "cd ./api && npm run db.init",
-    "db.seed": "cd ./api && npm run db.seed",
-    "api.dev": "cd ./api && npm run start:dev",
-    "ui.dev": "cd ./ui && npm run dev"
+    "db.init": "npm --prefix api run db.init",
+    "db.seed": "npm --prefix api run db.seed",
+    "api.dev": "npm --prefix api run start:dev",
+    "ui.dev": "npm --prefix ui run dev",
+    "ui.cypress": "npm --prefix ui run cypress.open"
   }
 }

@@ -12,7 +12,7 @@ import { useStore } from '../redux/store';
 const defaultUser = {
   id: 1,
   name: 'Lian',
-  email: 'lian@unity3d.com',
+  email: 'lian.longfeng@unity3d.com',
 };
 
 export const Form = () => {
