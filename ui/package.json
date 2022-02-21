@@ -55,6 +55,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "http://localhost:3001",
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
     "@types/lodash": "^4.14.178",

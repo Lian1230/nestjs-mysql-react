@@ -15,6 +15,7 @@ import { PrismaService } from './prisma.service';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../..', 'build'),
+      exclude: ['/api*'],
     }),
   ],
   controllers: [AppController, UserController, FeedbackController, GameController],
