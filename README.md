@@ -1,5 +1,14 @@
 # NestJS-Prisma-React
 
+### Key Features:
+
+- Three layers of protection for the user/session constraint in the UI, API and DB respectively.
+- Rich featured table with server side data mode that supports sorting and searching.
+
+### Demo:
+![login-page](/demo-login.png)
+![feedback-page](/demo-feedback.png)
+
 ### API documentation:
 
 `GET`
@@ -14,10 +23,10 @@
     - `startedAt: string` (optional) search feedback from this date
     - `endTime: string` (optional) search feedback end to this date
 
-<!-- - /games: Fetch all games
+- `/games`: Fetch all games
   - query:
     - `userId: number` (optional) the userId. If provided, only return games that user played
-    - `includeSessions: string` (optional) if provided, includes the related sessions in each game -->
+    - `includeSessions: string` (optional) if provided, includes the related sessions in each game
 
 - `/games/sessions-no-comment`: Fetch all game sessions that haven't been commented by an user
   - query:
@@ -30,7 +39,7 @@
     - `userId: number` (required) the userId
     - `sessionId: number` (required) the sessionId on which the user comments
     - `rating: number` (required) the rating user put on this session
-    - `content: string` (required) the comment, can be empty
+    - `content: string` (optional) the comment, can be empty
 
 &nbsp;
 
@@ -56,7 +65,7 @@ npm run dep
 npm run db.start
 ```
 
-A mysql db should be alive at 3306, you can check it via phpAdmin at: http://localhost:8080/.
+*A mysql db should be alive at 3306, you can check it via phpAdmin at: http://localhost:8080/.*
 
 #### Initialize and seed database:
 
@@ -67,7 +76,7 @@ npm run db.seed
 
 *The db should be now loaded with mock data.*
 
-#### Start api service:
+#### Start API service:
 
 ```
 npm run api.dev
@@ -75,7 +84,7 @@ npm run api.dev
 
 *NestJS server runs at 3001.*
 
-#### Start ui:
+#### Start UI:
 
 ```
 npm run ui.dev
@@ -94,11 +103,6 @@ npm run cypress.open
 ---
 
 &nbsp;
-
-### Key Features:
-
-- Three layers of protection for the user/session constraint in the UI, API and DB respectively.
-- Rich featured table with server side data mode that supports sorting and searching.
 
 ### Assumptions and Tech Choices:
 
@@ -122,7 +126,9 @@ npm run cypress.open
 
 
 ### Compromises:
-- Lack of unit tests: due to limited time, didn't write extensive unit test for pure functions. But would choose Jest to do it.
-- Fake login and no api auth: should have write a simple auth for user login and post feedback.
+- Lack of API validation: due to limited time, API validation is missing to check the request from UI.
+- Not enough unit tests: need more extensive unit test for pure functions, and would choose Jest to do it.
+- Many UX details to improve: UI is far from perfect. e.g. feedback and review should be separated into two pages and accessed by different group of users; app state should auto refreshes after the feedback is posted; app responsiveness for different devices can be improved, et al.
+- Fake login and no API auth: should have written an auth api for user login and post feedback.
 - Not fully containerized: only db is run in a container, should have also package api and npm into docker to ease the development.
 
