@@ -38,7 +38,7 @@
 
 &nbsp;
 
-### Instructions for launching and testing your API locally:
+### Local Development Guide:
 
 #### **Prerequisite**:
 
@@ -65,7 +65,7 @@ npm run db.init
 npm run db.seed
 ```
 
-The db should be now loaded with mock data.
+*The db should be now loaded with mock data.*
 
 #### Start api service:
 
@@ -73,7 +73,7 @@ The db should be now loaded with mock data.
 npm run api.dev
 ```
 
-NestJS server runs at 3001.
+*NestJS server runs at 3001.*
 
 #### Start ui:
 
@@ -81,13 +81,24 @@ NestJS server runs at 3001.
 npm run ui.dev
 ```
 
-UI runs at http://localhost:3000/
+*UI runs at http://localhost:3000/*
+
+#### Test the whole app (e2e):
+
+```
+npm run cypress.open
+```
 
 &nbsp;
 
 ---
 
 &nbsp;
+
+### Key Features:
+
+- Three layers of protection for the user/session constraint in the UI, API and DB respectively.
+- Rich featured table with server side data mode that supports sorting and searching.
 
 ### Assumptions and Tech Choices:
 
@@ -107,4 +118,11 @@ UI runs at http://localhost:3000/
 
 - **No redux but redux-like**: Didn't use redux but built a redux-like state management with react hooks. Store is also accessible in Redux-Devtool.
 
-- **Cypress test**: Due to limit time, only includes the most import e2e test for now.
+- **E2E test over integration test**: e2e test like cypress is way more reliable than integration test and is not neccessary harder to write than integration test.
+
+
+### Compromises:
+- Lack of unit tests: due to limited time, didn't write extensive unit test for pure functions. But would choose Jest to do it.
+- Fake login and no api auth: should have write a simple auth for user login and post feedback.
+- Not fully containerized: only db is run in a container, should have also package api and npm into docker to ease the development.
+

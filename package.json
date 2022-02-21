@@ -14,6 +14,6 @@
     "db.seed": "npm --prefix api run db.seed",
     "api.dev": "npm --prefix api run start:dev",
     "ui.dev": "npm --prefix ui run dev",
-    "ui.cypress": "npm --prefix ui run cypress.open"
+    "cypress.open": "npm --prefix ui run cypress.open"
   }
 }
