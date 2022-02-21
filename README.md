@@ -51,7 +51,7 @@
 
 #### **Prerequisite**:
 
-npm/node, docker & docker-compose, available port at 3306, 3001 and 3000.
+node v16 (lts), docker & docker-compose, available port at 3306, 3001 and 3000.
 
 #### Install dependencies:
 
