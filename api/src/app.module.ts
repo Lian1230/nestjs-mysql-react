@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserService } from './modules/user/user.service';
@@ -10,7 +12,11 @@ import { GameController } from './modules/game/game.controller';
 import { PrismaService } from './prisma.service';
 
 @Module({
-  imports: [],
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../..', 'build'),
+    }),
+  ],
   controllers: [AppController, UserController, FeedbackController, GameController],
   providers: [PrismaService, AppService, UserService, FeedbackService, GameService],
 })

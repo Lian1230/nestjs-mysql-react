@@ -6,6 +6,7 @@
 - Rich featured table with server side data mode that supports sorting and searching.
 
 ### Demo:
+
 ![login-page](/demo-login.png)
 ![feedback-page](/demo-feedback.png)
 
@@ -13,8 +14,8 @@
 
 `GET`
 
-- `/users`: Fetch all users (for dev only)
-- `/feedbacks`: Fetch all user feedbacks
+- `api/users`: Fetch all users (for dev only)
+- `api/feedbacks`: Fetch all user feedbacks
 
   - query:
     - `pageSize: string` (required) number of result per page
@@ -23,18 +24,19 @@
     - `startedAt: string` (optional) search feedback from this date
     - `endTime: string` (optional) search feedback end to this date
 
-- `/games`: Fetch all games
+- `api/games`: Fetch all games
+
   - query:
     - `userId: number` (optional) the userId. If provided, only return games that user played
     - `includeSessions: string` (optional) if provided, includes the related sessions in each game
 
-- `/games/sessions-no-comment`: Fetch all game sessions that haven't been commented by an user
+- `api/games/sessions-no-comment`: Fetch all game sessions that haven't been commented by an user
   - query:
     - `userId: string` (required) userId
 
 `POST`
 
-- `/feedback`: Create a new feedback
+- `api/feedback`: Create a new feedback
   - body:
     - `userId: number` (required) the userId
     - `sessionId: number` (required) the sessionId on which the user comments
@@ -65,7 +67,8 @@ npm run dep
 npm run db.start
 ```
 
-*A mysql db should be alive at 3306, you can check it via phpAdmin at: http://localhost:8080/.*
+- _A mysql db should be alive at 3306, you can check it via phpMyAdmin at: http://localhost:8080/._
+- _it might say it has some config issue, but please retry after a few moment._
 
 #### Initialize and seed database:
 
@@ -74,23 +77,24 @@ npm run db.init
 npm run db.seed
 ```
 
-*The db should be now loaded with mock data.*
+- _The db should be now loaded with mock data._
+- _In some machine the prisma might have issue connecting with mysql. For this case, I included a db dump file at "/api/docker-db-dump.sql", so you can import it via phpMyAdmin_
 
-#### Start API service:
+#### Start API Server:
 
 ```
-npm run api.dev
+npm run api.start
 ```
 
-*NestJS server runs at 3001.*
+_NestJS server runs at http://localhost:3001/._
 
-#### Start UI:
+#### (Optional) Start UI for dev:
 
 ```
 npm run ui.dev
 ```
 
-*UI runs at http://localhost:3000/*
+_UI Dev server runs at http://localhost:3000/_
 
 #### Test the whole app (e2e):
 
@@ -124,11 +128,10 @@ npm run cypress.open
 
 - **E2E test over integration test**: e2e test like cypress is way more reliable than integration test and is not neccessary harder to write than integration test.
 
-
 ### Compromises:
+
 - Lack of API validation: due to limited time, API validation is missing to check the request from UI.
 - Not enough unit tests: need more extensive unit test for pure functions, and would choose Jest to do it.
 - Many UX details to improve: UI is far from perfect. e.g. feedback and review should be separated into two pages and accessed by different group of users; app state should auto refreshes after the feedback is posted; app responsiveness for different devices can be improved, et al.
 - Fake login and no API auth: should have written an auth api for user login and post feedback.
 - Not fully containerized: only db is run in a container, should have also package api and npm into docker to ease the development.
-

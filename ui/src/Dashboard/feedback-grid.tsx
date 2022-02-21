@@ -88,7 +88,7 @@ export const FeedbackGrid = () => {
           } else {
             params.sort = '-createdAt';
           }
-          return request<{ data: Feedback[] }>('http://localhost:3001/feedbacks', { params });
+          return request<{ data: Feedback[] }>('http://localhost:3001/api/feedbacks', { params });
         }}
         editable={{
           type: 'multiple',

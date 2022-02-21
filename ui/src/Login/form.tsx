@@ -23,7 +23,7 @@ export const Form = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    request('http://localhost:3001/users').then((res) => setUsers(res));
+    request('http://localhost:3001/api/users').then((res) => setUsers(res));
   }, []);
 
   const autoComplete = (mail: string = defaultUser.email) => {

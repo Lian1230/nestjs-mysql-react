@@ -7,13 +7,13 @@
   "license": "UNLICENSED",
   "scripts": {
     "dep": "npm --prefix api i && npm --prefix ui i",
-    "db.remove": "npm run db.stop && docker-compose rm",
-    "db.stop": "cd ./db && docker-compose stop",
     "db.start": "cd ./db && docker-compose up -d",
     "db.init": "npm --prefix api run db.init",
     "db.seed": "npm --prefix api run db.seed",
+    "api.start": "npm --prefix api run start",
     "api.dev": "npm --prefix api run start:dev",
     "ui.dev": "npm --prefix ui run dev",
+    "ui.build": "npm --prefix ui run build",
     "cypress.open": "npm --prefix ui run cypress.open"
   }
 }

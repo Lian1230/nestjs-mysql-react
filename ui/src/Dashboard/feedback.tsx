@@ -22,7 +22,7 @@ export const Feedback = () => {
   const sessionMap = useRef<{ [key in string]: Session[] }>();
 
   useEffect(() => {
-    request<Game[]>('http://localhost:3001/games/sessions-no-comment', {
+    request<Game[]>('http://localhost:3001/api/games/sessions-no-comment', {
       params: {
         userId: user?.id,
       },
@@ -42,7 +42,7 @@ export const Feedback = () => {
   const sessions = !selectedGameId ? [] : sessionMap.current?.[selectedGameId] ?? [];
 
   const submit = () => {
-    request('http://localhost:3001/feedback', {
+    request('http://localhost:3001/api/feedback', {
       method: 'POST',
       data: {
         userId: user?.id,
