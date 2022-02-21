@@ -15,7 +15,7 @@ const columns: ProColumns<Feedback>[] = [
     dataIndex: 'rating',
     search: false,
     sorter: true,
-    width: 230,
+    width: 170,
     render: (_, { rating }) => (
       <Space>
         <Rating ratingValue={(rating / 5) * 100} readonly size={30} />
@@ -27,7 +27,8 @@ const columns: ProColumns<Feedback>[] = [
     dataIndex: 'content',
     valueType: 'textarea',
     copyable: true,
-    ellipsis: true,
+    width: 300,
+    // ellipsis: true,
     // onFilter: true,
     search: false,
   },
@@ -47,7 +48,7 @@ const columns: ProColumns<Feedback>[] = [
     title: 'Duration',
     dataIndex: 'duration',
     search: false,
-    width: 100,
+    width: 60,
     renderText: (text) => `${text} mins`,
   },
   {
@@ -56,7 +57,7 @@ const columns: ProColumns<Feedback>[] = [
     valueType: 'dateTime',
     sorter: true,
     hideInSearch: true,
-    width: 180,
+    width: 100,
   },
   {
     title: null,

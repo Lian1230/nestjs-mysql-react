@@ -13,7 +13,7 @@
     "api.start": "npm --prefix api run start",
     "api.dev": "npm --prefix api run start:dev",
     "ui.dev": "npm --prefix ui run dev",
-    "ui.build": "npm --prefix ui run build && rsync -av --delete ./ui/build/ ./api/build",
+    "ui.build": "npm --prefix ui run build && rsync -av ./ui/build/ ./api/build",
     "cypress.open": "npm --prefix ui run cypress.open"
   }
 }
