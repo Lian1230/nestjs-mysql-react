@@ -15,7 +15,7 @@ export default () => {
 
 const DashboardWrapper = styled.div`
   @media only screen and (max-width: 600px) {
-    margin: 0;
+    margin: 2px;
   }
   margin: 0 2rem;
 `;

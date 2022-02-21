@@ -9,6 +9,26 @@ import styled from 'styled-components';
 import { DatePresets } from './date-range-presets';
 import { Feedback } from '../redux/types';
 
+const UserRating = ({ rating }: { rating: number }) => {
+  return (
+    <RatingWrapper>
+      <Rating ratingValue={(rating / 5) * 100} readonly size={30} />
+    </RatingWrapper>
+  );
+};
+
+const RatingWrapper = styled(Space)`
+  @media only screen and (max-width: 800px) {
+    .react-simple-star-rating {
+      top: 2px;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+`;
+
 const columns: ProColumns<Feedback>[] = [
   {
     title: 'Rating',
@@ -16,11 +36,7 @@ const columns: ProColumns<Feedback>[] = [
     search: false,
     sorter: true,
     width: 170,
-    render: (_, { rating }) => (
-      <Space>
-        <Rating ratingValue={(rating / 5) * 100} readonly size={30} />
-      </Space>
-    ),
+    render: (_, { rating }) => <UserRating rating={rating} />,
   },
   {
     title: 'Comment',
@@ -52,6 +68,7 @@ const columns: ProColumns<Feedback>[] = [
     renderText: (text) => `${text} mins`,
   },
   {
+    className: 'created_at',
     title: 'Created At',
     dataIndex: 'createdAt',
     valueType: 'dateTime',
@@ -129,7 +146,19 @@ const Wrapper = styled.div`
   .ant-pagination {
     margin: 16px 12px;
   }
-  .react-simple-star-rating {
-    top: 2px;
+  .ant-table.ant-table-middle {
+    @media only screen and (max-width: 900px) {
+      .created_at {
+        font-size: 12px;
+      }
+    }
+    @media only screen and (max-width: 800px) {
+      font-size: 12px;
+    }
+    @media only screen and (max-width: 700px) {
+      .created_at {
+        font-size: 10px;
+      }
+    }
   }
 `;

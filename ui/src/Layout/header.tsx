@@ -37,6 +37,9 @@ export const Header = () => {
 };
 
 const Wrapper = styled(Layout.Header)`
+  @media only screen and (max-width: 600px) {
+    padding: 2px;
+  }
   padding: 0 2rem;
 `;
 
