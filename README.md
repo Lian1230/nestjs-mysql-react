@@ -32,7 +32,7 @@
     - `userId: number` (optional) the userId. If provided, only return games that user played
     - `includeSessions: string` (optional) if provided, includes the related sessions in each game
 
-- `api/games/sessions-no-comment`: Fetch all game sessions that haven't been commented by an user
+- `api/games/sessions-no-comment`: Fetch all game sessions that haven't been commented by the user
   - query:
     - `userId: string` (required) userId
 
