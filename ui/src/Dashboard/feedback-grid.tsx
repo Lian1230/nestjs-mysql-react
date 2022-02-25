@@ -99,7 +99,7 @@ export const FeedbackGrid = () => {
       <ProTable<Feedback>
         columns={columns}
         actionRef={actionRef}
-        request={async (params = {}, sort, filter) => {
+        request={async (params = {}, sort, _filter) => {
           if (!isEmpty(sort)) {
             const sortBy = Object.keys(sort)[0];
             params.sort = `${sort[sortBy] === 'ascend' ? '+' : '-'}${sortBy}`;
@@ -145,6 +145,11 @@ const Wrapper = styled.div`
   }
   .ant-pagination {
     margin: 16px 12px;
+  }
+  .ant-pro-table-list-toolbar-setting-item {
+    svg {
+      cursor: pointer;
+    }
   }
   .ant-table.ant-table-middle {
     @media only screen and (max-width: 900px) {

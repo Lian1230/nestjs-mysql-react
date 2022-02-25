@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Input, Typography, Select, Space, message } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
 import { Rating } from 'react-simple-star-rating';
@@ -15,31 +15,27 @@ export const Feedback = () => {
   const { user } = useStore();
   const [rating, setRating] = useState(100);
   const [games, setGames] = useState<Game[]>();
+  const [sessionMap, setSessionMap] = useState<{ [key in string]: Session[] }>();
   const [selectedGameId, setSelectedGameId] = useState<string>();
   const [selectedSessionId, setSelectedSessionId] = useState<number>();
   const [comment, setComment] = useState<string>();
 
-  const sessionMap = useRef<{ [key in string]: Session[] }>();
+  const updateGame = (): Promise<Game[]> =>
+    request<Game[]>('/api/games/sessions-no-comment', {
+      params: { userId: user?.id },
+    })
+      .then((games) => {
+        setGames(games);
+        setSessionMap(games.reduce((prev, curr) => ({ ...prev, [curr.id]: curr.sessions }), {}));
+      })
+      .catch((err) => message.error(err?.data?.message ?? 'Getting game error.', 5));
 
   useEffect(() => {
-    request<Game[]>('/api/games/sessions-no-comment', {
-      params: {
-        userId: user?.id,
-      },
-    }).then((games) => {
-      setGames(games);
-      sessionMap.current = games.reduce(
-        (prev, curr) => ({ ...prev, [curr.id]: curr.sessions }),
-        {},
-      );
-    });
+    updateGame();
   }, []);
 
-  const handleRating = (rate: number) => {
-    setRating(rate);
-  };
-
-  const sessions = !selectedGameId ? [] : sessionMap.current?.[selectedGameId] ?? [];
+  const sessions = !selectedGameId ? [] : sessionMap?.[selectedGameId] ?? [];
+  const isNoAvailableSessions = !games?.length || (!!selectedGameId && !sessions.length);
 
   const submit = () => {
     request('/api/feedback', {
@@ -53,15 +49,32 @@ export const Feedback = () => {
     })
       .then(() => {
         message.success('You feedback is published! Thank you for comment!');
+        updateGame();
+        setSelectedGameId(undefined);
+        setSelectedSessionId(undefined);
       })
       .catch((err) => {
         message.error(err?.data?.message ?? 'Unknown serverside error.', 5);
       });
   };
 
-  const formatSession = (session: Session = sessions[0]) => {
-    if (!session) return undefined;
-    return `${session.duration} mins on ${moment(session.startedAt).format('YYYY-MM-DD')}`;
+  const handleRating = (rate: number) => {
+    setRating(rate);
+  };
+
+  const getSessionDisplayName = (session?: Session) => {
+    if (!games) return 'Select Session';
+    if (isNoAvailableSessions) return 'No Session Available';
+    const currSession = session || sessions.find((s) => s.id === selectedSessionId);
+    if (!currSession) return 'Select Session';
+    return `${currSession.duration} mins on ${moment(currSession.startedAt).format('YYYY-MM-DD')}`;
+  };
+
+  const getGameDisplayName = () => {
+    if (!games) return 'Select Game';
+    if (!games.length) return 'No Game Available';
+    if (!selectedGameId) return 'Select Game';
+    return games.find((g) => g.id.toString() === selectedGameId)?.name;
   };
 
   return (
@@ -70,12 +83,13 @@ export const Feedback = () => {
       <Space style={{ marginBottom: '1rem' }}>
         <Select
           loading={!games}
-          defaultValue={'Select Game'}
+          disabled={!games?.length}
+          value={getGameDisplayName()}
           style={{ minWidth: 130 }}
           size="large"
           onChange={(gameId) => {
             setSelectedGameId(gameId);
-            setSelectedSessionId(sessionMap.current?.[gameId][0].id);
+            setSelectedSessionId(sessionMap?.[gameId][0].id);
           }}
         >
           {games?.map((game) => (
@@ -83,14 +97,15 @@ export const Feedback = () => {
           ))}
         </Select>
         <Select
-          defaultValue={'Select Session'}
-          style={{ minWidth: 180 }}
+          loading={!games}
+          disabled={isNoAvailableSessions}
           size="large"
-          value={formatSession(sessions.find((s) => s.id === selectedSessionId))}
+          style={{ minWidth: 180 }}
+          value={getSessionDisplayName()}
           onChange={(id) => setSelectedSessionId(Number.parseInt(id))}
         >
           {sessions.map((session) => (
-            <Select.Option key={session.id}>{formatSession(session)}</Select.Option>
+            <Select.Option key={session.id}>{getSessionDisplayName(session)}</Select.Option>
           ))}
         </Select>
       </Space>

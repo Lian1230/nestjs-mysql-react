@@ -134,6 +134,6 @@ npm run cypress.open
 
 - Lack of API validation: due to limited time, API validation is missing to check the request from UI.
 - Not enough unit tests: need more extensive unit test for pure functions, and would choose Jest to do it.
-- Many UX details to improve: UI is far from perfect. e.g. feedback and review should be separated into two pages and accessed by different group of users; app state should auto refreshes after the feedback is posted; app responsiveness for different devices can be improved, et al.
+- Many UX details to improve: UI is far from perfect. e.g. feedback and review should be separated into two pages and accessed by different group of users; no optimization is applied; app responsiveness could be improved, et al.
 - Fake login and no API auth: should have written an auth api for user login and post feedback.
-- Not fully containerized: only db is run in a container, should have also package api and npm into docker to ease the development.
+- Not fully containerized: only database is run in a container, should have packed all services into docker to ease the development and deployment.
